@@ -46,7 +46,6 @@ namespace Asfalter.UnitSimulator
             {
                 Units.Add(unitOne);
             }
-
             unitOne.Start();
         }
     }
