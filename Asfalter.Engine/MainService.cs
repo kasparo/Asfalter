@@ -29,7 +29,8 @@ namespace Asfalter.Engine
 
         protected override void OnStop()
         {
-           
+            DataProvider provider = new DataProvider();
+            provider.Close();
         }
 
         
