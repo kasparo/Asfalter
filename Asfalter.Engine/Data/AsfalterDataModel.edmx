@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Asfalter.Engine.Data.Store" Alias="Self" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.6" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="AsfalterEngineDataStoreContainer">
+          <EntitySet Name="unit" EntityType="Asfalter.Engine.Data.Store.unit" store:Type="Tables" Schema="asfalter" />
+          <EntitySet Name="unit_record" EntityType="Asfalter.Engine.Data.Store.unit_record" store:Type="Tables" Schema="asfalter" />
+          <EntitySet Name="user" EntityType="Asfalter.Engine.Data.Store.user" store:Type="Tables" Schema="asfalter" />
+          <AssociationSet Name="Unit_UnitRecod_FK" Association="Asfalter.Engine.Data.Store.Unit_UnitRecod_FK">
+            <End Role="unit" EntitySet="unit" />
+            <End Role="unit_record" EntitySet="unit_record" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="unit">
+          <Key>
+            <PropertyRef Name="idUnit" />
+          </Key>
+          <Property Name="idUnit" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="systemId" Type="char" Nullable="false" MaxLength="16" />
+          <Property Name="created" Type="datetime" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="lastActivity" Type="datetime" />
+          <Property Name="description" Type="text" />
+        </EntityType>
+        <EntityType Name="unit_record">
+          <Key>
+            <PropertyRef Name="idUnitRecord" />
+          </Key>
+          <Property Name="idUnitRecord" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="unitId" Type="int" Nullable="false" />
+          <Property Name="currentTime" Type="datetime" Nullable="false" />
+          <Property Name="weight" Type="int" />
+          <Property Name="speed" Type="int" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="iduser" />
+          </Key>
+          <Property Name="iduser" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" MaxLength="45" />
+          <Property Name="surname" Type="varchar" MaxLength="60" />
+          <Property Name="isAdmin" Type="bit" Nullable="false" />
+          <Property Name="login" Type="varchar" Nullable="false" MaxLength="20" />
+          <Property Name="password" Type="varchar" Nullable="false" MaxLength="20" />
+        </EntityType>
+        <Association Name="Unit_UnitRecod_FK">
+          <End Role="unit" Type="Asfalter.Engine.Data.Store.unit" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="unit_record" Type="Asfalter.Engine.Data.Store.unit_record" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="unit">
+              <PropertyRef Name="idUnit" />
+            </Principal>
+            <Dependent Role="unit_record">
+              <PropertyRef Name="unitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Asfalter.Engine.Data" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="unit" EntityType="Asfalter.Engine.Data.unit" />
+          <EntitySet Name="unit_record" EntityType="Asfalter.Engine.Data.unit_record" />
+          <EntitySet Name="user" EntityType="Asfalter.Engine.Data.user" />
+          <AssociationSet Name="Unit_UnitRecod_FK" Association="Asfalter.Engine.Data.Unit_UnitRecod_FK">
+            <End Role="unit" EntitySet="unit" />
+            <End Role="unit_record" EntitySet="unit_record" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="unit">
+          <Key>
+            <PropertyRef Name="idUnit" />
+          </Key>
+          <Property Name="idUnit" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="systemId" Type="String" Nullable="false" MaxLength="16" Unicode="false" FixedLength="false" />
+          <Property Name="created" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="lastActivity" Type="DateTime" />
+          <Property Name="description" Type="String" MaxLength="65535" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="unit_record" Relationship="Asfalter.Engine.Data.Unit_UnitRecod_FK" FromRole="unit" ToRole="unit_record" />
+        </EntityType>
+        <EntityType Name="unit_record">
+          <Key>
+            <PropertyRef Name="idUnitRecord" />
+          </Key>
+          <Property Name="idUnitRecord" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="unitId" Type="Int32" Nullable="false" />
+          <Property Name="currentTime" Type="DateTime" Nullable="false" />
+          <Property Name="weight" Type="Int32" />
+          <Property Name="speed" Type="Int32" />
+          <NavigationProperty Name="unit" Relationship="Asfalter.Engine.Data.Unit_UnitRecod_FK" FromRole="unit_record" ToRole="unit" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="iduser" />
+          </Key>
+          <Property Name="iduser" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="45" Unicode="false" FixedLength="false" />
+          <Property Name="surname" Type="String" MaxLength="60" Unicode="false" FixedLength="false" />
+          <Property Name="isAdmin" Type="Boolean" Nullable="false" />
+          <Property Name="login" Type="String" Nullable="false" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="password" Type="String" Nullable="false" MaxLength="20" Unicode="false" FixedLength="false" />
+        </EntityType>
+        <Association Name="Unit_UnitRecod_FK">
+          <End Role="unit" Type="Asfalter.Engine.Data.unit" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="unit_record" Type="Asfalter.Engine.Data.unit_record" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="unit">
+              <PropertyRef Name="idUnit" />
+            </Principal>
+            <Dependent Role="unit_record">
+              <PropertyRef Name="unitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="AsfalterEngineDataStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="unit">
+            <EntityTypeMapping TypeName="Asfalter.Engine.Data.unit">
+              <MappingFragment StoreEntitySet="unit">
+                <ScalarProperty Name="idUnit" ColumnName="idUnit" />
+                <ScalarProperty Name="systemId" ColumnName="systemId" />
+                <ScalarProperty Name="created" ColumnName="created" />
+                <ScalarProperty Name="lastActivity" ColumnName="lastActivity" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="unit_record">
+            <EntityTypeMapping TypeName="Asfalter.Engine.Data.unit_record">
+              <MappingFragment StoreEntitySet="unit_record">
+                <ScalarProperty Name="idUnitRecord" ColumnName="idUnitRecord" />
+                <ScalarProperty Name="unitId" ColumnName="unitId" />
+                <ScalarProperty Name="currentTime" ColumnName="currentTime" />
+                <ScalarProperty Name="weight" ColumnName="weight" />
+                <ScalarProperty Name="speed" ColumnName="speed" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="user">
+            <EntityTypeMapping TypeName="Asfalter.Engine.Data.user">
+              <MappingFragment StoreEntitySet="user">
+                <ScalarProperty Name="iduser" ColumnName="iduser" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="surname" ColumnName="surname" />
+                <ScalarProperty Name="isAdmin" ColumnName="isAdmin" />
+                <ScalarProperty Name="login" ColumnName="login" />
+                <ScalarProperty Name="password" ColumnName="password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

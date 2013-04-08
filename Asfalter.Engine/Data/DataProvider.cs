@@ -5,62 +5,62 @@ using System.Text;
 using MySql.Data.MySqlClient;
 using System.Configuration;
 using Asfalter.Common.Dao;
+using Asfalter.Engine.Data;
+using System.Data.EntityClient;
 
 namespace Asfalter.Engine
 {
     internal class DataProvider
     {
-        private MySqlConnection Connection { get; set; }
-
-        public DataProvider()
+        public unit InsertUnit(Guid systemId)
         {
-            Connection = new MySqlConnection();
-            Connection.ConnectionString = ConfigurationManager.ConnectionStrings["Asfalter"].ConnectionString;
-
-            OpenConnection();
-        }
-
-        public void InsertUnit(Guid systemId)
-        {
-            MySqlCommand insert = new MySqlCommand();
-            insert.CommandText = "INSERT INTO unit (systemId, created) VALUES (@systemId, @created)";
-            insert.Connection = Connection;
-
-            insert.Parameters.Add(new MySqlParameter("systemId", systemId.ToString()));
-            insert.Parameters.Add(new MySqlParameter("created", DateTime.Now));
-         
-            insert.ExecuteNonQuery();
-        }
-
-        public void InsertUnitRecord(UnitRecord record, int idUnit)
-        {
-            MySqlCommand insert = new MySqlCommand();
-            insert.CommandText = "INSERT INTO unit_record (unitId, currentTime, weight, speed) VALUES (@unitId, @currentTime, @weight, @speed)";
-            insert.Connection = Connection;
-
-            insert.Parameters.Add(new MySqlParameter("unitId", idUnit));
-            insert.Parameters.Add(new MySqlParameter("currentTime", record.CurrnetTime));
-            insert.Parameters.Add(new MySqlParameter("weight", record.Weight));
-            insert.Parameters.Add(new MySqlParameter("speed", record.Speed));
-
-            insert.ExecuteNonQuery();
-        }
-
-        private void OpenConnection()
-        {
-            try
+            using (var context = new Entities())
             {
-                Connection.Open();
-            }
-            catch(Exception ex)
-            {
-                Logger.Write(ex.ToString());
+                unit existUnit = GetUnitByID(systemId);
+                if (existUnit != null)
+                    return existUnit;
+
+                unit newUnit = new unit()
+                {
+                    systemId = systemId.ToString(),
+                    created = DateTime.Now
+                };
+
+                context.unit.Add(newUnit);
+                context.SaveChanges();
+
+                return newUnit;
             }
         }
 
-        public void Close()
+        public unit GetUnitByID(Guid id)
         {
-            Connection.Close();
+            using (var context = new Entities())
+            {
+                unit item = context.unit.SingleOrDefault(u => u.systemId == id.ToString());
+                if (item != null)
+                    return item;
+            }
+            return null;
+        }
+
+        public void InsertUnitRecord(UnitRecord record, unit ownerUnit)
+        {
+            using (var context = new Entities())
+            {
+                unit_record newRecord = new unit_record()
+                {
+                    unit = ownerUnit,
+                    currentTime = record.CurrnetTime,
+                    weight = record.Weight,
+                    speed = record.Speed
+                };
+                context.unit_record.Add(newRecord);
+                context.SaveChanges();
+
+
+                
+            }
         }
     }
 }
